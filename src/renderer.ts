@@ -1,29 +1,38 @@
 import net from "net";
 import Parser from "./parser";
-import { group } from "console";
+import Graph from "./graph/graph";
 
-var server = net.createServer(function(connection : any) {
-  var content = "";
+let server = net.createServer(function(connection : any) {
+  let content = "";
+  let parser = new Parser();
+  let graphs : Graph[] = [];
+
+  const GRAPH_BEG_TAG = "<graph ";
+  const GRAPH_END_TAG = "</graph>";
+  const GROUP_BEG_TAG = "<group>";
+  const GROUP_END_TAG = "</group>";
 
   connection.on('data', function(data : any) {
     // Always append the data that we just received.
     // We'll check later if we received a graph end or a document end.
     content += data.toString();
 
-    if (data.toString().indexOf("</graph>") > -1) {
+    if (data.toString().indexOf(GRAPH_END_TAG) > -1) {
       do {
-        var graph_beg_idx = content.indexOf("<graph ");
-        var graph_end_idx = content.indexOf("</graph>") + "</graph>".length;
+        let graph_beg_idx = content.indexOf(GRAPH_BEG_TAG);
+        let graph_end_idx = content.indexOf(GRAPH_END_TAG) + GRAPH_END_TAG.length;
 
-        var graph_xml = content.substring(graph_beg_idx, graph_end_idx);
+        let graph_xml = content.substring(graph_beg_idx, graph_end_idx);
+        graphs.push(parser.parseGraph(graph_xml));
 
         content = content.substring(0, graph_beg_idx) + content.substring(graph_end_idx);
-      } while (content.indexOf("</graph>") > -1);
-    } else if (data.toString().indexOf("</group>") > -1) {
-      var group_beg_idx = content.indexOf("<group>");
-      var group_end_idx = content.indexOf("</group>") + "</group>".length;
+      } while (content.indexOf(GRAPH_END_TAG) > -1);
+    } 
+    else if (data.toString().indexOf(GROUP_END_TAG) > -1) {
+      let group_beg_idx = content.indexOf(GROUP_BEG_TAG);
+      let group_end_idx = content.indexOf(GROUP_END_TAG) + GROUP_END_TAG.length;
 
-      var group_xml = content.substring(group_beg_idx, group_end_idx);
+      let group_xml = content.substring(group_beg_idx, group_end_idx);
 
       content = content.substring(0, group_beg_idx) + content.substring(group_end_idx);
     }
@@ -31,7 +40,5 @@ var server = net.createServer(function(connection : any) {
 
   connection.write('y');
 });
-
-
 
 server.listen(4444, function() { });
