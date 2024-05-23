@@ -11,7 +11,8 @@ rules.push({
 export const rendererConfig: Configuration = {
   target: 'electron-renderer',
   externals: {
-    "net": "require('net')"
+    "net": "require('net')",
+    "graphviz": "require('d3-graphviz')"
   },
   module: {
     rules,

@@ -1,6 +1,8 @@
 import net from "net";
 import Parser from "./parser";
 import Graph from "./graph/graph";
+import * as d3 from 'd3-graphviz';
+import Dotter from "./dotter";
 
 let server = net.createServer(function(connection : any) {
   let content = "";
@@ -23,7 +25,15 @@ let server = net.createServer(function(connection : any) {
         let graph_end_idx = content.indexOf(GRAPH_END_TAG) + GRAPH_END_TAG.length;
 
         let graph_xml = content.substring(graph_beg_idx, graph_end_idx);
-        graphs.push(parser.parseGraph(graph_xml));
+        let graph = parser.parseGraph(graph_xml);
+        graphs.push(graph);
+
+        if (graph.blocks().length > 0) {
+          let dotText = new Dotter().CFGGraphToDot(graph);
+          console.log(dotText);
+          d3.graphviz("#graph")
+            .renderDot(dotText);
+        }
 
         content = content.substring(0, graph_beg_idx) + content.substring(graph_end_idx);
       } while (content.indexOf(GRAPH_END_TAG) > -1);
@@ -42,3 +52,4 @@ let server = net.createServer(function(connection : any) {
 });
 
 server.listen(4444, function() { });
+

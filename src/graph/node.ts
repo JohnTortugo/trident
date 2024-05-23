@@ -1,5 +1,6 @@
 import assert from "assert";
 
+// A node in the SEA graph
 export default class Node {
   private _id: number;
   private _idx: number;
@@ -80,11 +81,41 @@ export default class Node {
     this._destination                 = this.getProperty("destination", properties);
     this._frequency                   = this.getProperty("frequency", properties);
     this._block                       = this.getProperty("block", properties);
+    this._in                          = [];
+    this._out                         = [];
 
     if (properties.length > 0) {
       console.log(properties);
       assert(false, "Unprocessed properties in node constructor.");
     }
+  }
+
+  public id(): number {
+    return this._id;
+  }
+
+  public name() : string {
+    return this._name;
+  }
+
+  public req() : Node[] {
+    return this._in;
+  }
+
+  public in(index : number) : Node {
+    return this._in[index];
+  }
+
+  public add_out(out: Node) : void {
+    this._out.push(out);
+  }
+
+  public add_in(input: Node) : void {
+    this._in.push(input);
+  }
+
+  public set_req(idx : number, input: Node) : void {
+    this._in[idx] = input;
   }
 
   // This method is only used in the constructor to set the properties of the
@@ -94,7 +125,7 @@ export default class Node {
   private getProperty<Type>(name: string, properties: Array<[string, string]>): Type {
     for (let i = 0; i < properties.length; i++) {
       if (properties[i][0] == name) {
-        let value = properties[i][1] as Type;
+        let value = (properties[i][1] as unknown) as Type;
         properties.splice(i, 1);
         return value;
       }
