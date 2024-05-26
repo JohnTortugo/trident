@@ -1,8 +1,8 @@
+import Group from "./graph/group";
 import Graph from "./graph/graph";
 import Block from "./graph/block";
 import Node from "./graph/node";
 import { XMLParser } from "fast-xml-parser";
-import { assert } from "console";
 
 export default class Parser {
   private parser : XMLParser = undefined;
@@ -15,12 +15,11 @@ export default class Parser {
     });
   }
 
-  private parseGroups(groups: any): void {
-    for (let i = 0; i < groups.length; i++) {
-      let group_method = this.parseMethod(groups[i].method);
-      let group_properties = this.parseProperties(groups[i].properties);
-      //let group_graphs = this.parseGraphs(groups[i].graph);
-    }
+  public parseGroup(groupXmlString: string): Group {
+    let groupXmlObj = this.parser.parse(groupXmlString);
+    let group_props = this.parseProperties(groupXmlObj.group.properties);
+    let group_method = undefined; //groupXmlObj.group.method.bytecodes;
+    return new Group(group_props, group_method);
   }
 
   // Given a collection of properties represented in the XML object, this method
