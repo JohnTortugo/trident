@@ -5,17 +5,22 @@ import Group from "./graph/group";
 import * as d3 from 'd3-graphviz';
 import Dotter from "./dotter";
 
+let parser = new Parser();
+
+const GRAPH_BEG_TAG = "<graph ";
+const GRAPH_END_TAG = "</graph>";
+const GROUP_BEG_TAG = "<group>";
+const GROUP_END_TAG = "</group>";
+
+
 let server = net.createServer(function(connection : any) {
-  let content = "";
-  let parser = new Parser();
+  connection.write('y');
+
+  let content : string = "";
   let graphs : Graph[] = [];
   let groups : Group[] = [];
 
-  const GRAPH_BEG_TAG = "<graph ";
-  const GRAPH_END_TAG = "</graph>";
-  const GROUP_BEG_TAG = "<group>";
-  const GROUP_END_TAG = "</group>";
-
+  // This is executed for every chunk of data that we receive.
   connection.on('data', function(data : any) {
     // Always append the data that we just received.
     // We'll check later if we received a graph end or a document end.
@@ -53,9 +58,9 @@ let server = net.createServer(function(connection : any) {
       // Parse the group.
       let group_xml = content.substring(beg_idx, end_idx);
       let group = parser.parseGroup(group_xml);
-          group.setGraphs(graphs);
+          group.set_graphs(graphs);
 
-      console.log("Group: " + group.getName());
+      console.log("Group: " + group.name());
 
       groups.push(group);
 
@@ -64,7 +69,14 @@ let server = net.createServer(function(connection : any) {
     }
   });
 
-  connection.write('y');
+  // TODO: Process remaining content in "content"
+  connection.on('close', function() {
+    //console.log(`Connection closed ${content}`);
+  });
+
+  connection.on("error", function (error : any) {
+    console.log(`Socket Error: ${error.message}`);
+  });
 });
 
 server.listen(4444, function() { });

@@ -5,7 +5,7 @@
   "description": "My Electron application description",
   "main": ".webpack/main",
   "scripts": {
-    "start": "electron-forge start",
+    "start": "electron-forge start -- --js-flags=--max-old-space-size=500",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",

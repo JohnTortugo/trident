@@ -1,7 +1,6 @@
+import assert from "assert";
 import Block from "./block";
 import Node from "./node";
-
-import { assert } from "console";
 
 // The graph, in CFG and SEA format
 export default class Graph {

@@ -84,10 +84,7 @@ export default class Node {
     this._in                          = [];
     this._out                         = [];
 
-    if (properties.length > 0) {
-      console.log(properties);
-      assert(false, "Unprocessed properties in node constructor.");
-    }
+    assert(properties.length == 0, "Unprocessed properties in node constructor.");
   }
 
   public id(): number {
@@ -99,6 +96,10 @@ export default class Node {
   }
 
   public req() : Node[] {
+    return this._in;
+  }
+
+  public ins() : Node[] {
     return this._in;
   }
 
@@ -116,6 +117,154 @@ export default class Node {
 
   public set_req(idx : number, input: Node) : void {
     this._in[idx] = input;
+  }
+
+  public outs() : Node[] {
+    return this._out;
+  }
+
+  public out(index : number) : Node {
+    return this._out[index];
+  }
+
+  public idx() : number {
+    return this._idx;
+  }
+
+  public type() : string {
+    return this._type;
+  }
+
+  public bottom_type() : string {
+    return this._bottom_type;
+  }
+
+  public phase_type() : string {
+    return this._phase_type;
+  }
+
+  public category() : string {
+    return this._category;
+  }
+
+  public dump_spec() : string {
+    return this._dump_spec;
+  }
+
+  public is_block_proj() : boolean {
+    return this._is_block_proj;
+  }
+
+  public is_block_start() : boolean {
+    return this._is_block_start;
+  }
+
+  public idom() : number {
+    return this._idom;
+  }
+
+  public dom_depth() : number {
+    return this._dom_depth;
+  }
+
+  public is_con() : boolean {
+    return this._is_con;
+  }
+
+  public is_shared() : boolean {
+    return this._is_shared;
+  }
+
+  public is_dontcare() : boolean {
+    return this._is_dontcare;
+  }
+
+  public is_dead_loop_safe() : boolean {
+    return this._is_dead_loop_safe;
+  }
+
+  public needs_anti_dependence_check() : boolean {
+    return this._needs_anti_dependence_check;
+  }
+
+  public old_node_idx() : number {
+    return this._old_node_idx;
+  }
+
+  public ideal_opcode() : string {
+    return this._ideal_opcode;
+  }
+
+  public jvms() : string {
+    return this._jvms;
+  }
+
+  public bci() : string {
+    return this._bci;
+  }
+
+  public line() : string {
+    return this._line;
+  }
+
+  public reg() : string {
+    return this._reg;
+  }
+
+  public con() : string {
+    return this._con;
+  }
+
+  public short_name() : string {
+    return this._short_name;
+  }
+
+  public lrg() : number {
+    return this._lrg;
+  }
+
+  public rematerialize() : boolean {
+    return this._rematerialize;
+  }
+
+  public has_swapped_edges() : boolean {
+    return this._has_swapped_edges;
+  }
+
+  public may_be_short_branch() : boolean {
+    return this._may_be_short_branch;
+  }
+
+  public is_cisc_alternate() : boolean {
+    return this._is_cisc_alternate;
+  }
+
+  public is_copy() : boolean {
+    return this._is_copy;
+  }
+
+  public debug_orig() : string {
+    return this._debug_orig;
+  }
+
+  public is_macro() : boolean {
+    return this._is_macro;
+  }
+
+  public source() : string {
+    return this._source;
+  }
+
+  public destination() : string {
+    return this._destination;
+  }
+
+  public frequency() : number {
+    return this._frequency;
+  }
+
+  public block() : number {
+    return this._block;
   }
 
   // This method is only used in the constructor to set the properties of the

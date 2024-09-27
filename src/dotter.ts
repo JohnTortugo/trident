@@ -46,7 +46,7 @@ export default class Dotter {
     });
 
     graph.blocks().forEach((block : Block) => {
-      block.out().forEach((succ : Block) => {
+      block.outs().forEach((succ : Block) => {
         dotText += block.id() + " -> " + succ.id() + "\n";
       });
     });

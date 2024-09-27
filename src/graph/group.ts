@@ -5,7 +5,9 @@ export default class Group {
   private _name : string = "";
   private _public : boolean = false;
   private _static : boolean = false;
-  private _compilationId : number = -1;
+  private _compilation_id : number = -1;
+  private _osr : string = "";
+
   private _graphs : Graph[] = [];
   private _method : string = "";
 
@@ -14,20 +16,38 @@ export default class Group {
     this._name           = this.getProperty("name", properties);
     this._public         = this.getProperty("public", properties);
     this._static         = this.getProperty("static", properties);
-    this._compilationId  = this.getProperty("compilationId", properties);
+    this._compilation_id = this.getProperty("compilationId", properties);
+    this._osr            = this.getProperty("osr", properties);
 
-    if (properties.length > 0) {
-      console.log(properties);
-      assert(false, "Unprocessed properties in node constructor.");
-    }
+    assert(properties.length == 0, "Unprocessed properties in group constructor.");
   }
 
-  public getName() : string {
+  public name() : string {
     return this._name;
   }
 
-  public setGraphs(graphs : Graph[]) : void {
+  public is_public() : boolean {
+    return this._public;
+  }
+
+  public is_static() : boolean {
+    return this._static;
+  }
+
+  public compilationId() : number {
+    return this._compilation_id;
+  }
+
+  public is_osr() : string {
+    return this._osr;
+  }
+
+  public set_graphs(graphs : Graph[]) : void {
     this._graphs = graphs;
+  }
+
+  public graphs() : Graph[] {
+    return this._graphs;
   }
 
   // This method is only used in the constructor to set the properties of the

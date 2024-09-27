@@ -5,10 +5,10 @@ import Node from "./graph/node";
 import { XMLParser } from "fast-xml-parser";
 
 export default class Parser {
-  private parser : XMLParser = undefined;
+  private _xmlParser : XMLParser = undefined;
 
   constructor() {
-    this.parser = new XMLParser({
+    this._xmlParser = new XMLParser({
       ignoreAttributes : false,
       attributeNamePrefix: 'attr__', // prefix of attributes' names
       textNodeName : "attr__text",
@@ -16,9 +16,9 @@ export default class Parser {
   }
 
   public parseGroup(groupXmlString: string): Group {
-    let groupXmlObj = this.parser.parse(groupXmlString);
+    let groupXmlObj = this._xmlParser.parse(groupXmlString);
     let group_props = this.parseProperties(groupXmlObj.group.properties);
-    let group_method = undefined; //groupXmlObj.group.method.bytecodes;
+    let group_method = undefined; // TODO: parse "Method": groupXmlObj.group.method;
     return new Group(group_props, group_method);
   }
 
@@ -28,21 +28,25 @@ export default class Parser {
   private parseProperties(input_props: any): Array<[string, string]> {
     // The parsing library adds the properties under a "p" field.
     if (input_props == undefined || input_props.p  == undefined) { return []; }
-    input_props = input_props.p;
+    let props_to_parse = input_props.p;
 
     // The result is an array of tuples, where the first element is the property
     // name and the second is the value.
     let properties = Array<[string, string]>();
 
-    for (let i = 0; i < input_props.length; i++) {
-      properties.push([input_props[i].attr__name, input_props[i].attr__text]);
+    for (let i = 0; i < props_to_parse.length; i++) {
+      let name = props_to_parse[i].attr__name;
+      let value = props_to_parse[i].attr__text;
+
+      console.assert(name != undefined, "Property name is undefined.");
+      properties.push([name, value != undefined ? value : ""]);
     }
 
     return properties;
   }
 
   public parseGraph(graphXmlString: string): Graph {
-    let graphXmlObj = this.parser.parse(graphXmlString);
+    let graphXmlObj = this._xmlParser.parse(graphXmlString);
     let graph = new Graph();
 
     this.parseNodes(graphXmlObj.graph.nodes, graph);

@@ -19,11 +19,11 @@ export default class Block {
     return this._nodes;
   }
 
-  public out(): Block[] {
+  public outs(): Block[] {
     return this._out;
   }
 
-  public in(): Block[] {
+  public ins(): Block[] {
     return this._in;
   }
 
